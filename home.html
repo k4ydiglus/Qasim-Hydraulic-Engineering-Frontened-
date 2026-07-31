@@ -1,0 +1,945 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the workshop!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Poppins&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        height: auto;
+        overflow-x: hidden;
+    }
+
+    body {
+        font-family: "Major Mono Display", monospace;
+    }
+
+    p {
+        font-family: "Space Mono", monospace;
+    }
+
+    /*----------------------------------- TOP-WINDOW AREA --------------------------------*/
+    .top-window {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+    }
+
+    .window-pull {
+        color: white;
+        padding: 5px 0;
+        font-size: 25px;
+        cursor: pointer;
+        transition: transform 0.6s ease, top 0.6s ease;
+        position: relative;
+    }
+
+    #toggle-window:checked+.top-window .window-pull {
+        transform: translateY(268px);
+    }
+
+    .slide-window {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        overflow: hidden;
+        background: rgb(0, 27, 12);
+        transition: height 0.6s ease;
+        z-index: 9;
+    }
+
+    #toggle-window:checked+.top-window+.slide-window {
+        height: 300px;
+    }
+
+    #toggle-window:checked+.top-window+.slide-window .inner-content {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .chart-card,
+    .chart-card-body {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    .apexcharts-tooltip {
+        background: #dad7cd !important;
+        color: #001B0C !important;
+        font-family: 'Space Mono', monospace !important;
+        font-size: 10px !important;
+        text-align: start !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+
+    .apexcharts-xaxistooltip {
+        background: #001B0C !important;
+        color: #fff !important;
+        font-family: 'Space Mono', monospace !important;
+        font-size: 10px !important;
+        text-align: start !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+
+    .apexcharts-tooltip-marker {
+        background: #66BB6A !important;
+    }
+
+    .new-world-card {
+        background-color: #dad7cd;
+        color: #122019;
+    }
+
+    .btn-new-world {
+        width: 100%;
+        background-color: #132a13;
+
+        a {
+            color: #dad7cd;
+        }
+    }
+
+    .btn-new-world:hover {
+        border: 1px solid #132a13;
+
+        a {
+            color: #122019;
+        }
+    }
+
+    .btn-hidden {
+        display: none;
+
+        a {
+            color: #dad7cd;
+        }
+    }
+
+    /*----------------------------------- HERO-IMAGE AREA --------------------------------*/
+    .heroimg {
+        min-height: 100vh;
+        width: 100%;
+        position: relative;
+        background: linear-gradient(to right, #00200feb 20%, transparent 100%),
+        url("{% static 'app/images/herosec3.jpg' %}") no-repeat center center/cover;
+        overflow: hidden;
+    }
+
+    .heroimg .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40%;
+        background: linear-gradient(to top, #001e11eb, transparent);
+        z-index: 1;
+    }
+
+    /*------------------------------- ! CONTENT AREA ! ----------------------------------*/
+    .content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .content h1 {
+        word-break: break-word;
+        font-size: clamp(1.5rem, 4vw, 3rem);
+        font-weight: bold;
+        color: transparent;
+        background: linear-gradient(to right, #dad7cd 0%, #dad7cd 100%);
+        background-repeat: no-repeat;
+        background-size: 0% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: smoothReveal 6s forwards;
+    }
+
+    .content p {
+        opacity: 0;
+        color: #ffffff82;
+        transform: translateY(20px);
+        animation: fadeSlide 1s ease forwards;
+        animation-delay: 3.2s;
+    }
+
+    .slice {
+        --c1: #DAD7CD;
+        --c2: #588157;
+        --size-letter: 15px;
+        font-size: var(--size-letter);
+        background-color: transparent;
+        box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.443);
+        border: 1px solid var(--c2);
+        border-radius: 35px;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeSlide 1s ease forwards;
+        animation-delay: 4.5s;
+        transition: 300ms cubic-bezier(0.83, 0, 0.17, 1);
+    }
+
+    .slice>.text {
+        font-weight: 700;
+        color: white;
+        position: relative;
+        z-index: 1;
+        transition: color 700ms cubic-bezier(0.83, 0, 0.17, 1);
+    }
+
+    .slice::after {
+        content: "";
+        width: 0;
+        height: calc(300% + 1em);
+        position: absolute;
+        translate: -50% -50%;
+        inset: 50%;
+        rotate: 30deg;
+        background-color: var(--c2);
+        transition: 1000ms cubic-bezier(0.83, 0, 0.17, 1);
+    }
+
+    .slice:hover>.text {
+        color: var(--c1);
+    }
+
+    .slice:hover::after {
+        width: calc(120% + 1em);
+    }
+
+    .slice:active {
+        scale: 0.98;
+        filter: brightness(0.9);
+    }
+
+    .serv-head {
+        font-family: "Space Mono", monospace;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeSlide 1s ease forwards;
+        animation-delay: 5.5s;
+    }
+
+    .badges .badge {
+        border: 1px solid #A3B18A;
+        box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.644);
+        border-radius: 20px;
+        margin-right: 10px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeSlide 0.8s ease forwards;
+    }
+
+    .badge:hover {
+        border: 1px solid #dad7cd;
+        color: black;
+        background-color: #dad7cd;
+        box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.644);
+    }
+
+    .badges .badge:nth-child(1) {
+        animation-delay: 6.2s;
+    }
+
+    .badges .badge:nth-child(2) {
+        animation-delay: 6.7s;
+    }
+
+    .badges .badge:nth-child(3) {
+        animation-delay: 7.2s;
+    }
+
+    /* ----------------------------------- ! INTRO-SECTION AREA ! -------------------------------- */
+    .intro-container {
+        background-color: #dad7cd;
+    }
+
+    .short-para {
+        margin-bottom: 0;
+        font-size: 12px;
+        color: #466757;
+    }
+
+    .q-card {
+        border-radius: 0;
+        transition: transform 0.4s cubic-bezier(.25, .8, .25, 1),
+            box-shadow 0.4s cubic-bezier(.25, .8, .25, 1);
+
+        .card-header {
+            border-radius: 0;
+            background-color: #dad7cd;
+        }
+
+        .card-body {
+            color: #132a13;
+            border-top: 2px solid #4f772d;
+            border-bottom: 2px solid #4f772d;
+            background-color: #dad7cd
+        }
+    }
+
+    .q-card .card-body {
+        transition: border 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .q-card:hover {
+        transform: translateY(-10px) scale(1.02);
+    }
+
+    .q-card:hover .card-body {
+        border: 3px solid rgb(95, 161, 14);
+        box-shadow: 2px 5px 20px #132a1388;
+    }
+
+    /* ----------------------------------- ! SERVICES AREA ! -------------------------------- */
+    .service-container {
+        background-color: #001B0C;
+    }
+
+    .dark-para {
+        margin-bottom: 0;
+        font-size: 12px;
+        color: #122019;
+    }
+
+    .s-card {
+        background-color: #001B0C;
+        border-radius: 0;
+        border: 0;
+        border-left: 3px solid #DAD7CD;
+        transition: all 0.4s ease;
+    }
+
+    .s-icon {
+        color: #4fa74f;
+        transition: color 0.4s ease;
+    }
+
+    .s-head {
+        color: white;
+    }
+
+    .s-para {
+        color: #a5afaa;
+    }
+
+    .s-card:hover {
+        background-color: #132a13;
+        border-left: 3px solid #132a13;
+        border-radius: 5px;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.322);
+
+        .s-icon {
+            color: #ecf39e;
+        }
+    }
+
+    /* ------------------------------- ! ANIMATION AREA ! ------------------------------- */
+    @keyframes fadeSlide {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes smoothReveal {
+        from {
+            background-size: 0% 100%;
+        }
+
+        to {
+            background-size: 100% 100%;
+        }
+    }
+
+    /*------------------------------- ! MEDIA-QUERIES AREA ! -------------------------------*/
+    @media (max-width: 980px) {
+        .new-world-card {
+            display: none;
+            visibility: none;
+        }
+
+        .chart-card {
+            padding-top: 0;
+        }
+
+        .btn-hidden {
+            display: block;
+            visibility: visible;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .heroimg {
+            align-items: flex-start;
+        }
+
+        .content {
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+
+        .content h1 {
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .material-badge {
+            display: block;
+            /* force new line if needed */
+            margin-top: 1rem !important;
+            /* bootstrap mt-3 */
+        }
+    }
+</style>
+
+<body>
+
+    <!-- ----------------------------------- TOP-WINDOW AREA -------------------------------- -->
+    <input type="checkbox" id="toggle-window" hidden>
+
+    <div class="top-window text-center">
+        <label for="toggle-window" class="window-pull">
+            <i class="fa-regular fa-window-minimize"></i>
+        </label>
+    </div>
+
+    <div class="slide-window">
+        <div class="inner-content text-white text-center pt-5">
+            <div class="container">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="new-world-card card border-0"
+                            style="border-bottom: 3px solid #dad7cd; border-radius: 0;">
+                            <div class="card-body pt-4 border-0">
+                                <div class="head my-3">
+                                    <i class="fs-1 fa-solid fa-lines-leaning" style="color: #4f772d;"></i>
+                                    <i class="fs-6 fa-solid fa-arrow-left"></i>
+                                    <i class="fs-1 fa-regular fa-hourglass-half" style="color: #4f772d;"></i>
+                                </div>
+                                <p class="mb-0" style="font-size: 10px;">12 Hours of Continuous working will Shape-Out
+                                    The best version of <br> your
+                                    Expectations, putting in a perfect Valve.</p>
+                            </div>
+                            <div class="card-footer pb-4 border-0"><button class="btn btn-new-world p-3 rounded-0"><a
+                                        href="{% url 'dashboard' %}" style="text-decoration: none;">Lets
+                                        Star The
+                                        Journey</a></button></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="card chart-card border-0" style="background: '#001B0C';">
+                            <div class="card-body chart-card-body p-0" style="background: '#001B0C';">
+
+                                <div id="clients-chart" class="p-3"
+                                    style="border-radius: 0; border-bottom: 2px solid white;">
+                                </div>
+
+                                <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+                                <script>
+                                    var clientData = [
+                                        { x: new Date('2025-01-01').getTime(), y: [10, 50, 10, 50] },
+                                        { x: new Date('2025-02-01').getTime(), y: [20, 40, 20, 40] },
+                                        { x: new Date('2025-03-01').getTime(), y: [5, 30, 5, 30] },
+                                        { x: new Date('2025-04-01').getTime(), y: [15, 60, 15, 60] },
+                                        { x: new Date('2025-05-01').getTime(), y: [25, 70, 25, 70] },
+                                        { x: new Date('2025-06-01').getTime(), y: [18, 55, 18, 55] },
+                                        { x: new Date('2025-07-01').getTime(), y: [22, 65, 22, 65] },
+                                        { x: new Date('2025-08-01').getTime(), y: [30, 75, 30, 75] },
+                                        { x: new Date('2025-09-01').getTime(), y: [12, 50, 12, 50] },
+                                        { x: new Date('2025-10-01').getTime(), y: [28, 68, 28, 68] },
+                                        { x: new Date('2025-11-01').getTime(), y: [15, 60, 15, 60] },
+                                        { x: new Date('2025-12-01').getTime(), y: [20, 70, 20, 70] }
+                                    ];
+
+                                    var options = {
+                                        chart: {
+                                            type: 'candlestick',
+                                            background: '#001B0C',
+                                            foreColor: '#fff',
+                                            height: '100%',
+                                            width: '100%',
+                                            toolbar: { show: false }
+                                        },
+                                        plotOptions: {
+                                            candlestick: {
+                                                wick: { width: 2 },
+                                                colors: { upward: '#66BB6A', downward: '#B71C1C' }
+                                            },
+                                            bar: {
+                                                columnwidth: '50%',
+                                            }
+                                        },
+                                        title: {
+                                            text: 'Clients an Year',  // jo text dikhana hai
+                                            align: 'left',                  // left, center, right
+                                            margin: 10,                     // top/bottom spacing
+                                            offsetY: 0,                     // vertical position adjust
+                                            style: {
+                                                fontSize: '20px',           // font size
+                                                fontFamily: 'Space Mono',   // font family
+                                                fontWeight: 'normal',         // bold/normal
+                                                color: '#ffffff'            // font color
+                                            }
+                                        },
+                                        xaxis: {
+                                            type: 'datetime',
+                                            tickPlacement: 'on',
+                                            tickAmount: 11,
+                                            labels: {
+                                                format: 'MMM',
+                                                rotate: -45,
+                                                style: { fontSize: '8px', fontFamily: 'Poppins', colors: '#ccc' }
+                                            }
+                                        },
+                                        yaxis: {
+                                            min: 0,
+                                            max: 100,
+                                            tickAmount: 10,
+                                            forceNiceScale: true,
+                                            labels: { style: { fontSize: '5px', fontFamily: 'Poppins', colors: '#ccc' } }
+                                        },
+                                        grid: { borderColor: '#001B0C', strokeDashArray: 4 },
+                                        series: [{ data: clientData }]
+                                    };
+
+                                    new ApexCharts(document.querySelector("#clients-chart"), options).render();
+                                </script>
+
+                            </div>
+                        </div>
+                        <button class="btn btn-hidden mt-2 p-2 rounded-0"
+                            style="color: white; background-color: #58a05c; text-align: center; width: 100%;"><a
+                                href="{% url 'dashboard' %}" style="text-decoration: none;">Lets
+                                Star The
+                                Journey</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-md-12">
+                <div class="heroimg d-flex justify-content-start align-items-center">
+
+                    <!--------------------------------- ! OVERLAY ! ----------------------------------->
+                    <div class="overlay"></div>
+
+                    <!--------------------------------- ! CONTENT AREA ! ----------------------------------->
+                    <div class="container">
+                        <div class="row">
+                            <div class="content px-4 px-sm-3 px-md-4 text-start text-white">
+                                <div class="col-md-10">
+                                    <h1 class="fw-bold text-wrap text-break pe-2 text-start">
+                                        Qasim Hydraulic Engineering
+                                    </h1>
+                                    <p class="lead pt-2 fs-6 fs-md-5 fs-lg-4">
+                                        Quality and Profession will be Invested for You here <br>
+                                        Welcome to the workshop where you will see <br>the flow of efficient and
+                                        excellence
+                                    </p>
+                                </div>
+                                <div class="btns row d-flex justify-content-between">
+                                    <!-- Explore Button -->
+                                    <div
+                                        class="col-12 col-md-4 px-0 mt-5 d-flex justify-content-md-start justify-content-start mb-3 mb-md-0">
+                                        <button class="slice mt-4 px-4 py-2">
+                                            <span class="text">Explore</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Badges / Services -->
+                                    <div class="col-12 col-md-8 mt-5">
+                                        <div class="services text-md-start text-start">
+                                            <h5 class="serv-head ps-3">We Can Provide:</h5>
+                                            <div
+                                                class="badges d-flex mt-3 flex-wrap justify-content-md-start justify-content-start">
+                                                <div class="badge p-3">Valves</div>
+                                                <div class="badge p-3">Repairing</div>
+                                                <div class="badge p-3 material-badge">Material Production</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ----------------------------------- INTRO-SECTION AREA -------------------------------- -->
+    <div class="container-fluid" style="background-color: #dad7cd;">
+        <div class="container pt-4 intro-container">
+            <div class="row py-5">
+                <div class="col-md-12">
+                    <div class="card border-0" style="background-color: #dad7cd;">
+                        <h3 class="heading text-center" style="color: #132a13;">
+                            35 Years of Experience Has Made the <br>Walls Stronger And Reliable
+                        </h3>
+                        <p class="short-para mt-1 text-center">
+                            A Base Since 1992, taking care of All the trust of customers and partners. <br>
+                            The quality relie's on Experience And you found it here!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Cards Row -->
+                <div class="row intro-row pt-5 pb-5 d-flex justify-content-evenly align-items-stretch text-center">
+                    <div class="col-md-3 d-flex">
+                        <div class="card border-0 q-card flex-fill">
+                            <div class="card-header border-0 pt-3 q-head">
+                                <h5>Experience</h5>
+                            </div>
+                            <div class="card-body p-4 q-text">
+                                <p class="short-para">Years of patience and precision have defined our craft. Each
+                                    detail tells a story of effort, growth, and care. What we build stands not just
+                                    strong, but worthy of the trust we’ve earned through time.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex">
+                        <div class="card border-0 q-card flex-fill">
+                            <div class="card-header border-0 pt-3 q-head">
+                                <h5>Projects</h5>
+                            </div>
+                            <div class="card-body p-4 q-text">
+                                <p class="short-para">Every project begins with purpose and ends with precision. From
+                                    tiny systems to grand repairs, our designs reflect passion, discipline, and a
+                                    promise that every result will speak for itself.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex">
+                        <div class="card border-0 q-card flex-fill">
+                            <div class="card-header border-0 pt-3 q-head">
+                                <h5>Satisfaction</h5>
+                            </div>
+                            <div class="card-body p-4 q-text">
+                                <p class="short-para">Satisfaction isn’t measured in numbers, but in trust. Each
+                                    restored part and every happy client proves that perfection is not a dream here —
+                                    it’s our daily habit, our quiet signature.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ----------------------------------- SERVICES AREA -------------------------------- -->
+    <div class="container-fluid p-5"
+        style="background-color: #001B0C; border: 8px solid #31572c; box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.395);">
+        <div class="container m-3 service-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card border-0" style="background-color: #001B0C; color: #DAD7CD;">
+                        <h2>Our Services</h2>
+                        <p class="short-para">We provide reliable and expert solutions to <br> make your experience
+                            wonderfull</p>
+                    </div>
+                </div>
+
+                <div class="row service-row mt-4 d-flex justify-content-evenly">
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-plus"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Valve Manufacturing</h6>
+                                    <p class="s-para short-para">Crafted with precision, each valve is built to perform
+                                        flawlessly under pressure.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-screwdriver"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Valve Repair & Restoration</h6>
+                                    <p class="s-para short-para">Old or worn, every piece is revived to its original
+                                        strength and shine.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-chart-pie"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Industrial Maintenance</h6>
+                                    <p class="s-para short-para">From setup to servicing, we keep every system running
+                                        smooth and steady.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-brush"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Custom Solutions</h6>
+                                    <p class="s-para short-para">We design valves that match your exact industrial needs
+                                        — no compromise.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-alarm-clock"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">On-Time Delivery</h6>
+                                    <p class="s-para short-para">Every project completed on schedule, because trust runs
+                                        on time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-square-check"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Quality Assurance</h6>
+                                    <p class="s-para short-para">Each product passes strict inspection — perfection
+                                        isn’t optional here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-person-circle-check"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Technical Training</h6>
+                                    <p class="s-para short-para">Guiding the next generation of mechanics with real,
+                                        hands-on expertise.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-5">
+                        <div class="card s-card p-3">
+                            <div class="card-body p-0 d-flex">
+                                <div class="s-icon pe-3 d-flex justify-content-center align-items-center fs-2"><i
+                                        class="fa-solid fa-hand-holding-heart"></i></div>
+                                <div class="details">
+                                    <h6 class="s-head">Client Support</h6>
+                                    <p class="s-para short-para">Our job doesn’t end after delivery — we stay till
+                                        you’re fully satisfied.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ----------------------------------- FOOTER AREA -------------------------------- -->
+    <div class="container-fluid p-0" style="background: #bfe0c2;">
+        <footer class="py-5" style="background: #bfe0c2;">
+            <div class="container">
+
+                <!-- TOP GRID -->
+                <div class="row g-5">
+
+                    <!-- COLUMN 1: COMPANY -->
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <h5 class="mb-3" style="font-family: 'Space mono';">About Our Company</h5>
+                        <p style="font-size:10px; opacity:0.8;">
+                            We specialize in hydraulic valve repair, textile machinery parts,
+                            and industrial engineering solutions. Operating since 1989 and
+                            serving industries all over Pakistan with high–precision workmanship.
+                        </p>
+                    </div>
+
+                    <!-- COLUMN 2: PRODUCTS WITH THUMBNAILS -->
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <h5 class="mb-3" style="font-family: 'Space mono';">Products</h5>
+
+                        <div class="d-flex flex-column gap-2" style="font-size: 10px;">
+
+                            <div class="d-flex align-items-center ">
+                                <span style="font-family: 'Space mono';">_ Hydraulic Valves & Actuators</span>
+                            </div>
+
+                            <div class="d-flex align-items-center ">
+                                <span style="font-family: 'Space mono';">_ Textile Machinery Accessories</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <span style="font-family: 'Space mono';">_ Pneumatic Regulators</span>
+                            </div>
+
+                            <div class="d-flex align-items-center ">
+                                <span style="font-family: 'Space mono';">_ Industrial Repair Kits</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 3: SERVICES WITH THUMBNAILS -->
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <h5 class="mb-3" style="font-family: 'Space mono';">Services</h5>
+
+                        <div class="d-flex flex-column gap-2" style="font-size: 10px;">
+
+                            <div class="d-flex align-items-center">
+                                <span style="font-family: 'Space mono';">_ Valve Reconditioning & Overhauling</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <span style="font-family: 'Space mono';">_ Machine Calibration</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <span style="font-family: 'Space mono';">_ Pump Repair & Optimization</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <span style="font-family: 'Space mono';">_ On-site Technical Support</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 4: QUICK LINKS + POLICIES -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <h5 class="mb-3" style="font-family: 'Space mono';">Quick Links</h5>
+
+                        <ul class="list-unstyled" style="opacity:0.9; font-size:10px;">
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                About Us</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                Meet Our Team</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                Factory Tour</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                Client Testimonials</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                Request a Quotation</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                Product Catalog</li>
+                            <li class="mb-2" style="font-family: 'Space mono';"><i class="fa-solid fa-angle-right"></i>
+                                FAQs</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12 d-flex">
+                        <div class="box1 me-5">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span style="font-family: 'Space mono';">Plot #22 Industrial Area</span>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa-solid fa-phone"></i>
+                                <span style="font-family: 'Space mono';">+92 300 1234567</span>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span style="font-family: 'Space mono';">info@hydraulics.pk</span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 mt-3">
+                                <i class="fa-brands fa-facebook fa-lg"></i>
+                                <i class="fa-brands fa-instagram fa-lg"></i>
+                                <i class="fa-brands fa-linkedin fa-lg"></i>
+                            </div>
+                        </div>
+
+                        <div class="box2 ms-5">
+                            <h6 class="mb-2" style="font-family: 'Space mono';">Policies</h6>
+                            <ul class="list-unstyled" style="opacity:0.9; font-size:10px;">
+                                <li class="mb-2" style="font-family: 'Space mono';"><i
+                                        class="fa-solid fa-shield-halved"></i> Privacy Policy</li>
+                                <li class="mb-2" style="font-family: 'Space mono';"><i
+                                        class="fa-solid fa-file-contract"></i> Terms & Conditions</li>
+                                <li class="mb-2" style="font-family: 'Space mono';"><i
+                                        class="fa-solid fa-arrow-rotate-left"></i> Return & Warranty Policy</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </footer>
+        <!-- BOTTOM LINE -->
+        <div class="text-center mt-5 p-4" style="border-top:1px solid #132a13;">
+            <small style="opacity:0.6; font-family: 'Space mono';">
+                © 2025 Hydraulic & Textile Solutions. All rights reserved.
+            </small>
+        </div>
+    </div>
+
+</body>
+
+</html>
